@@ -28,7 +28,6 @@ const createWindow = () => {
   // mainWindow.webContents.openDevTools();
   mainWindow.webContents.once('dom-ready', function() {
       mainWindow.show();
-      mainWindow.maximize();
   })
 };
 
