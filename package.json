@@ -1,7 +1,7 @@
 {
   "name": "san-peautes",
   "productName": "San Peautes App",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "San Peautes sales management app",
   "repository": "https://github.com/raymondugv/San-Peautes-App.git",
   "main": "src/index.js",
