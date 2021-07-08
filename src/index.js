@@ -1,9 +1,33 @@
 const {
   app,
-  BrowserWindow
+  BrowserWindow,
+  webContents
 } = require('electron');
 const path = require('path');
 const { electron } = require('process');
+let loadingScreen;
+let width = 1280, height = 720;
+
+const createLoadingScreen = () => {
+  loadingScreen = new BrowserWindow(
+    Object.assign({
+      width: width,
+      height: height,
+      frame: false,
+      transparent: true
+    })
+  );
+
+  loadingScreen.setResizable(false);
+  loadingScreen.loadURL(
+    'file://'+__dirname+'/windows/loading/loading.html'
+  );
+
+  loadingScreen.on('closed', () => (loadingScreen = null));
+  loadingScreen.webContents.on('did-finish-load', () => {
+    loadingScreen.show();
+  });
+};
 
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -15,12 +39,15 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
 const createWindow = () => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-      width: 1280,
-      height: 720,
+      width: width,
+      height: height,
       show: false,
       autoHideMenuBar: true,
       useContentSize: true,
       icon: path.join(__dirname, 'icon.ico'),
+      webPreferences: {
+        nodeIntegration: true
+      },
   });
 
   // and load the index.html of the app.
@@ -28,22 +55,24 @@ const createWindow = () => {
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools();
-  mainWindow.webContents.once('dom-ready', function() {
-      mainWindow.show();
-  })
+  // mainWindow.webContents.once('dom-ready', function() {
+  //     mainWindow.show();
+  // })
+
+  mainWindow.webContents.on('did-finish-load', () => {
+    if (loadingScreen) {
+      loadingScreen.close();
+    }
+    mainWindow.show();
+  });
 };
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
-  updateApp = require('update-electron-app');
 
-  updateApp({
-    updateInterval: "1 hour",
-    notifyUser: true
-  });
-
+  createLoadingScreen();
   createWindow();
 });
 
