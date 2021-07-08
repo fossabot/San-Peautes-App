@@ -1,7 +1,7 @@
 {
   "name": "san-peautes",
   "productName": "san-peautes",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "San Peautes sales management app",
   "main": "src/index.js",
   "scripts": {
